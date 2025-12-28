@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ありがとうの てがみ ワークシート (AI ver)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+
+        body {
+            font-family: 'Kosugi Maru', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff8c00;
+            font-size: 28px;
+            margin-bottom: 10px;
+            border-bottom: 3px dashed #ff8c00;
+            padding-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .step-box {
+            background-color: #fff9e6;
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .step-number {
+            background-color: #ff8c00;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+        }
+
+        h3 {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #444;
+        }
+
+        .guide-text {
+            font-size: 14px;
+            color: #555;
+            background-color: #e6f2ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px dashed #aaa;
+            border-radius: 8px;
+            background-color: #fafafa;
+            font-family: 'Kosugi Maru', sans-serif;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #ff8c00;
+            background-color: #fff;
+        }
+
+        .hint-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        /* 画像付きヒントカードのスタイル */
+        .hint-card {
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            width: 140px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .hint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #8b5cf6;
+        }
+        .hint-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        .hint-card p {
+            padding: 8px;
+            font-size: 13px;
+            margin: 0;
+            text-align: center;
+            background-color: #f9fafb;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+        
+        /* 従来のテキストのみタグ */
+        .hint-tag {
+            background-color: #e0e0e0;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+        .hint-tag:hover {
+            background-color: #bcd4e6;
+        }
+
+        .ai-generated-tag {
+            background-color: #d1fae5; /* Light green for AI suggestions */
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        .ai-generated-tag:hover {
+            background-color: #a7f3d0;
+        }
+
+        .emotion-options {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .emotion-btn {
+            background-color: white;
+            border: 2px solid #888;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: center;
+            width: 120px;
+        }
+
+        .emotion-btn.selected {
+            border-color: #ff8c00;
+            background-color: #fff4e0;
+            font-weight: bold;
+        }
+
+        .emotion-icon {
+            font-size: 30px;
+            display: block;
+        }
+
+        /* 自由記述用のスタイル */
+        .other-emotion-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        .other-emotion-label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .final-draft {
+            background-color: #f0fff0;
+            border: 3px double #32cd32;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-generate {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #32cd32;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .btn-generate:active { transform: translateY(2px); }
+
+        .btn-check {
+            padding: 12px 24px;
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #cc7000;
+            transition: transform 0.1s;
+        }
+        .btn-check:active { transform: translateY(4px); box-shadow: none; }
+
+        .btn-print {
+            padding: 12px 24px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* AI Buttons */
+        .btn-ai {
+            background-color: #8b5cf6; /* Purple */
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .btn-ai:hover { background-color: #7c3aed; }
+        .btn-ai:disabled { background-color: #c4b5fd; cursor: not-allowed; }
+
+        #checkMessage {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            text-align: left;
+        }
+        .msg-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .msg-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .msg-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ヒント画像のローディングプレースホルダー */
+        .img-placeholder {
+            width: 100%;
+            height: 100px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 10px;
+            text-align: center;
+            padding: 5px;
+            box-sizing: border-box;
+            word-break: break-all;
+        }
+
+        @media print {
+            body { background-color: white; }
+            .container { box-shadow: none; width: 100%; max-width: 100%; padding: 0; }
+            .btn-generate, .button-group, .hint-tag, .step-number, .btn-ai, .hint-container { display: none; }
+            input, textarea { border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 10px; color: #8b5cf6; font-weight: bold;">AIが かんがえています...</p>
+</div>
+
+<div class="container">
+    <h1>ありがとうの てがみ ワークシート</h1>
+    <p class="subtitle">しつもんに こたえて、ありがとうの ぶんしょうを つくろう！</p>
+
+    <!-- STEP 1 -->
+    <div class="step-box">
+        <span class="step-number">ステップ 1</span>
+        <h3>だれに かく？</h3>
+        <div class="guide-text">
+            「ありがとう」を つたえたい 人の 名前を かこう。
+        </div>
+        <input type="text" id="who" placeholder="（例）お母さん、先生、〇〇くん">
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-box">
+        <span class="step-number">ステップ 2</span>
+        <h3>なにを してくれた？</h3>
+        <div class="guide-text">
+            その人は、あなたに なにを してくれたかな？<br>
+            思い出せないときは、「AIヒント」をおしてみよう。
+        </div>
+        <input type="text" id="what" placeholder="（例）重い荷物を持ってくれた、あそんでくれた">
+        
+        <button class="btn-ai" onclick="getAIHints()">
+            ✨ AIヒント (イラストで みる)
+        </button>
+
+        <div class="hint-container" id="hintContainer">
+            <span class="hint-tag" onclick="setInput('what', 'いっしょに あそんでくれた')">いっしょに あそんでくれた</span>
+            <span class="hint-tag" onclick="setInput('what', 'べんきょうを おしえてくれた')">べんきょうを おしえてくれた</span>
+            <span class="hint-tag" onclick="setInput('what', 'おとしものを ひろってくれた')">おとしものを ひろってくれた</span>
+            <span class="hint-tag" onclick="setInput('what', 'はなしを きいてくれた')">はなしを きいてくれた</span>
+        </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-box">
+        <span class="step-number">ステップ 3</span>
+        <h3>どんな きもち だった？</h3>
+        <div class="guide-text">
+            そのとき、あなたは どう おもったかな？ えらんでみよう。<br>
+            もし ちがうきもちなら、したの はこに かいてね。
+        </div>
+        <div class="emotion-options">
+            <div class="emotion-btn" onclick="selectEmotion(this, 'うれしかった')">
+                <span class="emotion-icon">😊</span>
+                うれしかった
+            </div>
+            <div class="emotion-btn" onclick="selectEmotion(this, 'たのしかった')">
+                <span class="emotion-icon">😆</span>
+                たのしかった
+            </div>
+            <div class="emotion-btn" onclick="selectEmotion(this, 'たすかった')">
+                <span class="emotion-icon">😌</span>
+                たすかった
+            </div>
+            <div class="emotion-btn" onclick="selectEmotion(this, 'ほっとした')">
+                <span class="emotion-icon">☕</span>
+                ほっとした
+            </div>
+        </div>
+        <input type="hidden" id="feeling">
+        
+        <!-- 自由記述追加 -->
+        <div class="other-emotion-box">
+            <label class="other-emotion-label">そのほかの きもち（じぶんで かく）</label>
+            <input type="text" id="otherFeeling" placeholder="（例）びっくりした、ドキドキした" oninput="clearEmotionSelection()">
+        </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-box">
+        <span class="step-number">ステップ 4</span>
+        <h3>これから どうしたい？（おまけ）</h3>
+        <div class="guide-text">
+            これから その人と どうしたいかな？
+        </div>
+        <input type="text" id="future" placeholder="（例）また あそびたいです、これからも よろしくね">
+        <div class="hint-container">
+            <span class="hint-tag" onclick="setInput('future', 'また あそびたいです')">また あそびたいです</span>
+            <span class="hint-tag" onclick="setInput('future', 'これからも なかよくしてね')">これからも なかよくしてね</span>
+            <span class="hint-tag" onclick="setInput('future', 'これからも よろしくおねがいします')">これからも よろしくおねがいします</span>
+        </div>
+    </div>
+
+    <button class="btn-generate" onclick="generateLetter()">ぶんしょうを つくる！</button>
+
+    <!-- FINAL OUTPUT -->
+    <div class="final-draft">
+        <h3>✨ できあがった てがみ ✨</h3>
+        <textarea id="finalText" rows="8" placeholder="ここに 文章が できあがります。"></textarea>
+        
+        <div style="text-align: right;">
+            <button class="btn-ai" onclick="polishTextWithAI()">
+                ✨ 魔法のペン (もっと すてきに)
+            </button>
+        </div>
+
+        <!-- Check Message Area -->
+        <div id="checkMessage"></div>
+
+        <div class="button-group">
+            <button class="btn-check" onclick="checkText()">👀 まちがいがないか チェック</button>
+            <button class="btn-print" onclick="window.print()">🖨️ いんさつする</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const apiKey = ""; // Environment will inject key
+
+    // --- Gemini & Imagen API Logic ---
+
+    // Text Generation (Gemini)
+    async function callGeminiAPI(userPrompt) {
+        // Validation removed as per system prompt
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                // If 401/403, it means key is invalid or not injected
+                if (response.status === 401) throw new Error("401 Unauthorized");
+                throw new Error(`Error: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.candidates?.[0]?.content?.parts?.[0]?.text;
+        } catch (error) {
+            console.error('Gemini API Error:', error);
+            showMessage("AIにつながらなかったみたい。もういちど ためしてみてね。", "error");
+            return null;
+        }
+    }
+
+    // Image Generation (Imagen)
+    async function callImagenAPI(imagePrompt) {
+        // Basic validation
+        if (!imagePrompt) return { success: false, error: "No Prompt" };
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+        
+        const payload = {
+            instances: [{ prompt: imagePrompt }],
+            parameters: { sampleCount: 1 }
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) {
+                const errorJson = await response.json().catch(() => ({}));
+                const errorMessage = errorJson.error?.message || response.statusText;
+                console.error("Imagen API Error Details:", errorMessage);
+                
+                // Return generic failure so we can fallback to emoji
+                return { success: false, error: errorMessage };
+            }
+
+            const data = await response.json();
+            
+            if (!data.predictions || !data.predictions[0] || !data.predictions[0].bytesBase64Encoded) {
+                return { success: false, error: "画像データなし" };
+            }
+
+            return { success: true, image: data.predictions[0].bytesBase64Encoded };
+        } catch (error) {
+            console.error('Imagen Network Error:', error);
+            return { success: false, error: "通信エラー" };
+        }
+    }
+
+    async function getAIHints() {
+        const who = document.getElementById('who').value;
+        if (!who) {
+            showMessage("ステップ1で「だれに」をいれてから おしてね！", "warning");
+            return;
+        }
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.style.display = 'flex';
+
+        // Update Prompt to ask for Emoji fallback
+        const prompt = `
+        対象者: "${who}"
+        ASDの児童が、この対象者に向けて感謝の手紙を書こうとしています。
+        この対象者が児童にしてくれたかもしれない、具体的で親切な行動を3つ考えてください。
+        
+        条件:
+        1. 日本語テキスト: 小学生でも読める簡単な言葉（ひらがな多め）。「〜してくれた」という形。
+        2. 画像プロンプト(英語): その行動を描写する、"Japanese anime style illustration" (日本のアニメ風イラスト)のプロンプト。温かい雰囲気で。
+        3. 絵文字: 行動を表す絵文字を1つ。
+        4. 出力形式: 以下のJSON配列のみを出力してください。
+        [
+            { "text": "ごはんを つくってくれた", "image_prompt": "...", "emoji": "🍳" },
+            ...
+        ]
+        `;
+
+        const resultText = await callGeminiAPI(prompt);
+        
+        if (!resultText) {
+            loadingOverlay.style.display = 'none';
+            return;
+        }
+
+        try {
+            const cleanJson = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const hints = JSON.parse(cleanJson);
+            
+            loadingOverlay.style.display = 'none'; 
+            
+            const container = document.getElementById('hintContainer');
+            
+            // Loop through hints
+            for (const hint of hints) {
+                const card = document.createElement('div');
+                card.className = 'hint-card';
+                card.onclick = function() { setInput('what', hint.text); };
+                
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'img-placeholder';
+                // Start with loading spinner
+                imgContainer.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;"></div>';
+                
+                const p = document.createElement('p');
+                p.textContent = hint.text;
+                
+                card.appendChild(imgContainer);
+                card.appendChild(p);
+                
+                if (container.firstChild) {
+                    container.insertBefore(card, container.firstChild);
+                } else {
+                    container.appendChild(card);
+                }
+
+                // Call Imagen - if fail, fallback to emoji
+                callImagenAPI(hint.image_prompt).then(result => {
+                    if (result.success && result.image) {
+                        const img = document.createElement('img');
+                        img.src = `data:image/png;base64,${result.image}`;
+                        img.alt = hint.text;
+                        imgContainer.replaceWith(img);
+                    } else {
+                        // Fallback to Emoji
+                        imgContainer.innerHTML = `<span style="font-size: 40px; line-height: 1;">${hint.emoji || '💡'}</span>`;
+                        imgContainer.style.backgroundColor = '#f3f4f6';
+                        imgContainer.title = "画像生成が制限されているため、絵文字を表示しています";
+                    }
+                });
+            }
+            
+            showMessage(`AIが「${who}」さんが してくれそうなことを イラスト(または絵文字)にしたよ！`, "success");
+
+        } catch (e) {
+            loadingOverlay.style.display = 'none';
+            console.error("JSON Parse Error", e);
+            showMessage("ヒントを うまく つくれなかったよ。ごめんね。", "error");
+        }
+    }
+
+    async function polishTextWithAI() {
+        const currentText = document.getElementById('finalText').value;
+        if (!currentText || currentText.length < 5) {
+            showMessage("まずは「ぶんしょうを つくる！」をおして、てがみを かいてね。", "warning");
+            return;
+        }
+        
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.style.display = 'flex';
+
+        const prompt = `
+        あなたは優しい学校の先生です。子供が書いた以下の手紙を、少しだけ自然で温かい文章に直してください。
+        
+        元の手紙:
+        "${currentText}"
+
+        条件:
+        1. 子供の素直な「声」や「文体」は残してください。大人の難しい言葉に変えないでください。
+        2. 文法の間違い（「てにおは」など）があれば直してください。
+        3. 最後に一言、相手が嬉しくなるような短い言葉を足しても良いです。
+        4. 出力は修正後の本文のみを返してください。説明は不要です。
+        `;
+
+        const polishedText = await callGeminiAPI(prompt);
+        loadingOverlay.style.display = 'none';
+
+        if (polishedText) {
+            document.getElementById('finalText').value = polishedText.trim();
+            showMessage("魔法のペンで、もっと すてきな てがみになったよ！✨", "success");
+        }
+    }
+
+    // --- Standard App Logic ---
+
+    function setInput(id, text) {
+        document.getElementById(id).value = text;
+    }
+
+    function selectEmotion(element, text) {
+        // ボタンが選ばれたら、自由記述欄をクリアする
+        document.getElementById('otherFeeling').value = '';
+
+        const buttons = document.querySelectorAll('.emotion-btn');
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('feeling').value = text;
+    }
+    
+    // 自由記述欄に入力があったら、ボタンの選択を解除する
+    function clearEmotionSelection() {
+        const buttons = document.querySelectorAll('.emotion-btn');
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        document.getElementById('feeling').value = ''; // hiddenもクリア
+    }
+
+    function generateLetter() {
+        const who = document.getElementById('who').value;
+        let what = document.getElementById('what').value.trim().replace(/[。、]+$/, '');
+        
+        // 気持ちの取得優先度: 1.自由記述 2.ボタン選択
+        let feeling = document.getElementById('otherFeeling').value;
+        if (!feeling) {
+            feeling = document.getElementById('feeling').value;
+        }
+        
+        const future = document.getElementById('future').value;
+
+        if (!who || !what) {
+            showMessage('「だれに」と「なにを」を かいてね！', 'warning');
+            return;
+        }
+
+        let letter = `${who} へ\n\n`;
+
+        if (what.endsWith('くれた') || what.endsWith('てくれた')) {
+            const stem = what.substring(0, what.length - 3);
+            letter += `このあいだは、${stem}くれましたね。\n`;
+        } else if (what.endsWith('ました')) {
+            letter += `このあいだは、${what}ね。\n`;
+        } else {
+            letter += `このあいだは、${what} ですね。\n`;
+        }
+        
+        if (feeling) {
+            letter += `わたしは、とても ${feeling} です。\n`;
+        }
+        
+        letter += `ありがとう。\n`;
+
+        if (future) {
+            letter += `${future}。\n`;
+        }
+
+        document.getElementById('finalText').value = letter;
+        document.getElementById('checkMessage').style.display = 'none';
+    }
+
+    function checkText() {
+        const text = document.getElementById('finalText').value;
+        let messages = [];
+        let isSuccess = true;
+
+        if (!text.trim()) {
+            showMessage("まだ なにも かいていないよ。「ぶんしょうを つくる！」をおしてね。", 'warning');
+            return;
+        }
+
+        if (text.includes('〇〇')) {
+            messages.push("⚠️ 「〇〇」のままの ところが あるよ。なまえに なおしてね。");
+            isSuccess = false;
+        }
+
+        if (!text.includes('ありがとう')) {
+            messages.push("⚠️ 「ありがとう」の ことばを いれよう！");
+            isSuccess = false;
+        }
+
+        if (text.length < 10) {
+            messages.push("⚠️ ぶんしょうが みじかいみたい。もうすこし かいてみよう。");
+            isSuccess = false;
+        }
+
+        if (isSuccess) {
+            showMessage("✅ バッチリ！ とても よい てがみ だね！<br>（こえに だして よんでみるよ🔊）", 'success');
+            speakText(text);
+        } else {
+            showMessage(messages.join('<br>'), 'warning');
+        }
+    }
+
+    function showMessage(html, type) {
+        const msgDiv = document.getElementById('checkMessage');
+        msgDiv.style.display = 'block';
+        msgDiv.innerHTML = html;
+        
+        if (type === 'success') msgDiv.className = 'msg-success';
+        else if (type === 'error') msgDiv.className = 'msg-error';
+        else msgDiv.className = 'msg-warning';
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const uttr = new SpeechSynthesisUtterance();
+            uttr.text = text;
+            uttr.lang = 'ja-JP';
+            uttr.rate = 1.0; 
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(uttr);
+        }
+    }
+</script>
+
+</body>
+</html>
