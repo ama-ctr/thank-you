@@ -26,4 +26,3 @@ if __name__ == '__main__':
     # ポート設定（Renderなどのクラウド環境用）
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
-    requirements.txt
